@@ -13,8 +13,9 @@ interface UserState {
     user: User | null;
     country: 'BR' | 'US' | 'CA' | 'World' | null;
     techStack: string[];
-    englishLevel: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Beginner' | 'Intermediate' | 'Advanced'; // Keeping legacy for migration safety
+    englishLevel: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Beginner' | 'Intermediate' | 'Advanced';
     hasCompletedOnboarding: boolean;
+    hasTakenPlacementTest: boolean;
     isAuthenticated: boolean;
     isLoading: boolean;
 }
@@ -24,6 +25,7 @@ interface UserActions {
     setCountry: (country: 'BR' | 'US' | 'CA' | 'World') => void;
     setTechStack: (stack: string[]) => void;
     setEnglishLevel: (level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Beginner' | 'Intermediate' | 'Advanced') => void;
+    setHasTakenPlacementTest: (hasTaken: boolean) => void;
     completeOnboarding: () => void;
     logout: () => void;
     setLoading: (isLoading: boolean) => void;
@@ -37,6 +39,7 @@ export const useUserStore = create<UserState & UserActions>()(
             techStack: ['React', 'TypeScript'],
             englishLevel: 'B1',
             hasCompletedOnboarding: false,
+            hasTakenPlacementTest: false,
             isAuthenticated: false,
             isLoading: false,
 
@@ -44,8 +47,9 @@ export const useUserStore = create<UserState & UserActions>()(
             setCountry: (country) => set({ country }),
             setTechStack: (techStack) => set({ techStack }),
             setEnglishLevel: (englishLevel) => set({ englishLevel }),
+            setHasTakenPlacementTest: (hasTaken) => set({ hasTakenPlacementTest: hasTaken }),
             completeOnboarding: () => set({ hasCompletedOnboarding: true }),
-            logout: () => set({ user: null, isAuthenticated: false, hasCompletedOnboarding: false }),
+            logout: () => set({ user: null, isAuthenticated: false, hasCompletedOnboarding: false, hasTakenPlacementTest: false }),
             setLoading: (isLoading) => set({ isLoading }),
         }),
         {

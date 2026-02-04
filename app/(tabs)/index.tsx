@@ -1,14 +1,14 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Image, Pressable } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { useUserStore } from '../../src/store/useUserStore';
 import { useGamificationStore } from '../../src/store/useGamificationStore';
 import { useTranslation } from '../../src/hooks/useTranslation';
 import { useRouter } from 'expo-router';
-import { Flame, Mic, BookOpen, Crown, ChevronRight, Play } from 'lucide-react-native';
+import { Flame, Mic, BookOpen, Crown, ChevronRight, Play, Award } from 'lucide-react-native';
 
 export default function ImmersionScreen() {
-    const { user, englishLevel } = useUserStore();
+    const { user, englishLevel, hasTakenPlacementTest } = useUserStore();
     const { streak, dailyVoiceMinutes, dailyGoalMinutes } = useGamificationStore();
     const { t } = useTranslation();
     const router = useRouter();
@@ -78,7 +78,28 @@ export default function ImmersionScreen() {
                     </View>
                 </View>
 
-                {/* Learning Feed Header */}
+                {/* Placement Test Prompt (Only if not taken) */}
+                {!hasTakenPlacementTest && (
+                    <Pressable
+                        onPress={() => router.push('/placement-test')}
+                        className="mx-4 mb-6 bg-purple-600 dark:bg-purple-700 p-5 rounded-3xl shadow-lg shadow-purple-200 dark:shadow-purple-900 flex-row items-center relative overflow-hidden"
+                    >
+                        <View className="absolute -right-4 -bottom-4 opacity-20">
+                            <Award size={80} color="white" />
+                        </View>
+                        <View className="flex-1 mr-4">
+                            <Text className="text-white font-bold text-lg mb-1">Discover your English Level</Text>
+                            <Text className="text-purple-100 text-xs leading-5">
+                                Take a 2-minute test to calibrate your learning path (A1-C2).
+                            </Text>
+                        </View>
+                        <View className="bg-white px-4 py-2 rounded-full">
+                            <Text className="text-purple-600 font-bold text-xs">Start</Text>
+                        </View>
+                    </Pressable>
+                )}
+
+                {/* Immersive Feed */}
                 <View className="px-4 flex-row justify-between items-end mb-4">
                     <Text className="text-xl font-bold text-slate-900 dark:text-white">For You</Text>
                     <TouchableOpacity>

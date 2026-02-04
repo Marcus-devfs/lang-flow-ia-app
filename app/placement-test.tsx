@@ -4,13 +4,13 @@ import { useRouter } from 'expo-router';
 import { Container } from '../src/components/Container';
 import { Button } from '../src/components/Button';
 import { useUserStore } from '../src/store/useUserStore';
-import { PLACEMENT_QUESTIONS, calculateLevel } from '../src/data/placementQuestions';
-import { Check, X, ChevronRight, Award, RotateCcw } from 'lucide-react-native';
+import { PLACEMENT_QUESTIONS, calculateLevel, LEVEL_DESCRIPTIONS } from '../src/data/placementQuestions';
+import { Check, X, ChevronRight, Award, RotateCcw, Info } from 'lucide-react-native';
 import clsx from 'clsx';
 
 export default function PlacementTestScreen() {
     const router = useRouter();
-    const { setEnglishLevel } = useUserStore();
+    const { setEnglishLevel, setHasTakenPlacementTest } = useUserStore();
 
     // State
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -50,33 +50,45 @@ export default function PlacementTestScreen() {
     const finishTest = () => {
         const finalLevel = calculateLevel(score);
         setEnglishLevel(finalLevel);
+        setHasTakenPlacementTest(true);
         Alert.alert("Profile Updated", `Your English level has been set to ${finalLevel}.`);
         router.back();
     };
 
     if (isFinished) {
         const finalLevel = calculateLevel(score);
+        const levelInfo = LEVEL_DESCRIPTIONS[finalLevel];
+
         return (
             <Container safe centered>
                 <View className="items-center justify-center p-6 w-full">
-                    <View className="w-32 h-32 bg-yellow-100 dark:bg-yellow-900/30 rounded-full items-center justify-center mb-6">
-                        <Award size={64} className="text-yellow-600 dark:text-yellow-400" />
+                    <View className="w-28 h-28 bg-yellow-100 dark:bg-yellow-900/30 rounded-full items-center justify-center mb-6">
+                        <Award size={56} className="text-yellow-600 dark:text-yellow-400" />
                     </View>
-                    <Text className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Test Complete!</Text>
-                    <Text className="text-lg text-slate-500 dark:text-slate-400 text-center mb-8">
-                        Based on your results, your suggested level is:
+                    <Text className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Test Complete!</Text>
+                    <Text className="text-slate-500 dark:text-slate-400 text-center mb-6">
+                        Based on your results, your calculated level is:
                     </Text>
 
-                    <View className="bg-blue-600 px-8 py-4 rounded-3xl shadow-lg shadow-blue-300 dark:shadow-blue-900 mb-10">
-                        <Text className="text-6xl font-extrabold text-white text-center">{finalLevel}</Text>
+                    <View className="bg-blue-600 w-full py-6 rounded-3xl shadow-lg shadow-blue-300 dark:shadow-blue-900 mb-6 items-center">
+                        <Text className="text-6xl font-extrabold text-white text-center mb-2">{finalLevel}</Text>
+                        <View className="bg-blue-500 px-4 py-1 rounded-full">
+                            <Text className="text-white font-bold text-lg">{levelInfo.title}</Text>
+                        </View>
                     </View>
 
-                    <Text className="text-slate-400 text-sm mb-8 text-center px-8">
-                        We've updated your profile to personalize your daily challenges.
-                    </Text>
+                    <View className="bg-slate-50 dark:bg-slate-800 p-5 rounded-2xl mb-8 w-full border border-slate-100 dark:border-slate-700">
+                        <View className="flex-row items-center mb-2 gap-2">
+                            <Info size={18} className="text-blue-500" />
+                            <Text className="font-bold text-slate-700 dark:text-slate-300">What does {finalLevel} mean?</Text>
+                        </View>
+                        <Text className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                            {levelInfo.description}
+                        </Text>
+                    </View>
 
                     <Button
-                        label="Continue to App"
+                        label="Save & Continue"
                         onPress={finishTest}
                         size="lg"
                         className="w-full"

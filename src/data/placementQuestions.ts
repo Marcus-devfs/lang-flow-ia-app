@@ -133,3 +133,30 @@ export const calculateLevel = (score: number): 'A1' | 'A2' | 'B1' | 'B2' | 'C1' 
     if (score <= 14) return 'C1';
     return 'C2';
 };
+
+export const LEVEL_DESCRIPTIONS = {
+    'A1': {
+        title: "Beginner",
+        description: "You can understand and use familiar everyday expressions and very basic phrases. You can introduce yourself and ask simple questions."
+    },
+    'A2': {
+        title: "Elementary",
+        description: "You understand sentences and frequently used expressions related to areas of most immediate relevance (e.g. basic personal and family information, shopping, local geography, employment)."
+    },
+    'B1': {
+        title: "Intermediate",
+        description: "You can produce simple connected text on topics which are familiar or of personal interest. You can describe experiences and events, dreams, hopes & ambitions."
+    },
+    'B2': {
+        title: "Upper Intermediate",
+        description: "You understand the main ideas of complex text on both concrete and abstract topics, including technical discussions in your field of specialization."
+    },
+    'C1': {
+        title: "Advanced",
+        description: "You can express yourself fluently and spontaneously without much obvious searching for expressions. You can use language flexibly and effectively for social, academic and professional purposes."
+    },
+    'C2': {
+        title: "Mastery",
+        description: "You can understand with ease virtually everything heard or read. You can summarize information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation."
+    }
+};
