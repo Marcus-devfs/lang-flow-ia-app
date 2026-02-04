@@ -224,7 +224,7 @@ const TRANSLATIONS = {
 };
 
 export function useTranslation() {
-    const { country } = useUserStore();
+    const country = useUserStore((state) => state.country);
     const lang = country === 'BR' ? 'BR' : 'EN';
 
     return {

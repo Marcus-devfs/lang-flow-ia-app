@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { useUserStore } from '../../src/store/useUserStore';
 import { useGamificationStore } from '../../src/store/useGamificationStore';
 import { useTranslation } from '../../src/hooks/useTranslation';
 import { User as UserIcon, Settings, Code, Target, Trash2, LogOut, Cpu, Database, Smartphone, Cloud, Layers } from 'lucide-react-native';
 import { Button } from '../../src/components/Button';
+import clsx from 'clsx';
 
 export default function ProfileScreen() {
-    const { user, techStack, englishLevel, setTechStack, logout } = useUserStore();
+    const user = useUserStore(state => state.user);
+    const techStack = useUserStore(state => state.techStack);
+    const englishLevel = useUserStore(state => state.englishLevel);
+    const setTechStack = useUserStore(state => state.setTechStack);
+    const logout = useUserStore(state => state.logout);
+    const setCountry = useUserStore(state => state.setCountry);
+    const country = useUserStore(state => state.country);
+
     const { dailyGoalMinutes, dailyGoalCards, setDailyGoals, resetDailyGoals } = useGamificationStore();
     const { t } = useTranslation();
+
 
     // Categorized Stacks
     const stackCategories = [
@@ -58,11 +67,35 @@ export default function ProfileScreen() {
             <ScrollView contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }} showsVerticalScrollIndicator={false}>
 
                 {/* Header */}
-                <View className="flex-row justify-between items-center mb-8 px-4">
+                <View className="flex-row justify-between items-center mb-6 px-4">
                     <Text className="text-3xl font-bold text-slate-900 dark:text-white">{t.profile.title}</Text>
-                    <TouchableOpacity className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
+                    <Pressable className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
                         <Settings size={20} className="text-slate-500" />
-                    </TouchableOpacity>
+                    </Pressable>
+                </View>
+
+                {/* Language Selector */}
+                <View className="px-4 mb-8">
+                    <View className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex-row">
+                        <Pressable
+                            onPress={() => setCountry('BR')}
+                            className={clsx(
+                                "flex-1 py-2 rounded-lg items-center justify-center",
+                                country === 'BR' && "bg-white dark:bg-slate-700 shadow-sm"
+                            )}
+                        >
+                            <Text className={clsx("font-bold", country === 'BR' ? "text-slate-900 dark:text-white" : "text-slate-500")}>🇧🇷 Português</Text>
+                        </Pressable>
+                        <Pressable
+                            onPress={() => setCountry('US')}
+                            className={clsx(
+                                "flex-1 py-2 rounded-lg items-center justify-center",
+                                country !== 'BR' && "bg-white dark:bg-slate-700 shadow-sm"
+                            )}
+                        >
+                            <Text className={clsx("font-bold", country !== 'BR' ? "text-slate-900 dark:text-white" : "text-slate-500")}>🇺🇸 English</Text>
+                        </Pressable>
+                    </View>
                 </View>
 
                 {/* User Card */}
@@ -96,18 +129,21 @@ export default function ProfileScreen() {
                         {goalOptions.map((opt) => {
                             const isActive = dailyGoalMinutes === opt.min;
                             return (
-                                <TouchableOpacity
+                                <Pressable
                                     key={opt.level}
                                     onPress={() => setDailyGoals(opt.min, opt.cards)}
-                                    className={`flex-1 min-w-[45%] p-4 rounded-2xl border ${isActive ? `${opt.bg} ${opt.border}` : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`}
+                                    className={clsx(
+                                        "flex-1 min-w-[45%] p-4 rounded-2xl border",
+                                        isActive ? `${opt.bg} ${opt.border}` : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700"
+                                    )}
                                 >
-                                    <Text className={`font-bold text-sm mb-1 ${isActive ? opt.color : 'text-slate-900 dark:text-white'}`}>
+                                    <Text className={clsx("font-bold text-sm mb-1", isActive ? opt.color : "text-slate-900 dark:text-white")}>
                                         {opt.level}
                                     </Text>
                                     <Text className="text-xs text-slate-500 dark:text-slate-400">
                                         {opt.min} min / {opt.cards} cards
                                     </Text>
-                                </TouchableOpacity>
+                                </Pressable>
                             )
                         })}
                     </View>
@@ -129,15 +165,18 @@ export default function ProfileScreen() {
                                 </View>
                                 <View className="flex-row flex-wrap gap-2">
                                     {cat.items.map((tech) => (
-                                        <TouchableOpacity
+                                        <Pressable
                                             key={tech}
                                             onPress={() => toggleStack(tech)}
-                                            className={`px-4 py-2 rounded-xl border ${techStack.includes(tech) ? 'bg-blue-600 border-blue-600 shadow-sm shadow-blue-200' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+                                            className={clsx(
+                                                "px-4 py-2 rounded-xl border",
+                                                techStack.includes(tech) ? "bg-blue-600 border-blue-600 shadow-sm shadow-blue-200" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                            )}
                                         >
-                                            <Text className={`font-medium text-sm ${techStack.includes(tech) ? 'text-white' : 'text-slate-600 dark:text-slate-300'}`}>
+                                            <Text className={clsx("font-medium text-sm", techStack.includes(tech) ? "text-white" : "text-slate-600 dark:text-slate-300")}>
                                                 {tech}
                                             </Text>
-                                        </TouchableOpacity>
+                                        </Pressable>
                                     ))}
                                 </View>
                             </View>

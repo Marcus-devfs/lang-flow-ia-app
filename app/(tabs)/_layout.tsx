@@ -1,11 +1,9 @@
 import { Tabs } from 'expo-router';
 import { Home, Mic, Layers, User } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
-import { useTranslation } from '../../src/hooks/useTranslation';
 
 export default function TabLayout() {
     const { colorScheme } = useColorScheme();
-    const { t } = useTranslation();
     const isDark = colorScheme === 'dark';
 
     // Colors for tab bar
@@ -29,28 +27,28 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: t.tabs.immersion,
+                    title: "Home",
                     tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
                 name="practice"
                 options={{
-                    title: t.tabs.practice,
+                    title: "Practice",
                     tabBarIcon: ({ color, size }) => <Mic color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
                 name="vocabulary"
                 options={{
-                    title: t.tabs.vocabulary,
+                    title: "Vocabulary",
                     tabBarIcon: ({ color, size }) => <Layers color={color} size={size} />,
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: t.tabs.profile,
+                    title: "Profile",
                     tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
                 }}
             />

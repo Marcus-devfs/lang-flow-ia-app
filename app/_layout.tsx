@@ -10,7 +10,8 @@ import { View, ActivityIndicator } from 'react-native';
 
 export default function RootLayout() {
     const { colorScheme } = useColorScheme();
-    const { hasCompletedOnboarding, isLoading } = useUserStore();
+    const hasCompletedOnboarding = useUserStore((state) => state.hasCompletedOnboarding);
+    const isLoading = useUserStore((state) => state.isLoading);
     const router = useRouter();
     const segments = useSegments();
     const [isReady, setIsReady] = useState(false);

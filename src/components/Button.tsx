@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, TouchableOpacityProps, View } from 'react-native';
-import { clsx } from 'clsx';
+import { Pressable, Text, TouchableOpacityProps, View } from 'react-native';
+import clsx from 'clsx';
 import { LucideIcon } from 'lucide-react-native';
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -46,15 +46,14 @@ export function Button({
     };
 
     return (
-        <TouchableOpacity
+        <Pressable
             className={clsx(baseStyles, variants[variant], sizes[size], className)}
-            activeOpacity={0.7}
             {...props}
         >
             <Text className={clsx("font-bold text-base", textColors[variant], textClassName)}>
                 {label}
             </Text>
             {Icon && <View className="ml-2"><Icon size={20} color={variant === 'primary' || variant === 'destructive' ? 'white' : '#64748b'} /></View>}
-        </TouchableOpacity>
+        </Pressable>
     );
 }
