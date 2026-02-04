@@ -1,88 +1,105 @@
-import React, { useEffect } from 'react';
-import { Text, View, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { Container } from '../../src/components/Container';
-import { Button } from '../../src/components/Button';
-import { VoiceVisualizer } from '../../src/components/VoiceVisualizer';
-import { useAudioRecorder } from '../../src/hooks/useAudioRecorder';
 import { useVoiceStore } from '../../src/store/useVoiceStore';
 import { useTranslation } from '../../src/hooks/useTranslation';
-import { Info } from 'lucide-react-native';
 import { useSessionFeedback } from '../../src/hooks/useSessionFeedback';
 import { FeedbackView } from '../../src/components/FeedbackView';
+import { DailyStandup } from '../../src/components/DailyStandup';
+import { Calendar, Briefcase, Mic } from 'lucide-react-native';
+
+type PracticeMode = 'selection' | 'daily' | 'interview' | 'free';
 
 export default function PracticeScreen() {
-    const { startRecording, stopRecording, hasPermission } = useAudioRecorder();
-    const { isRecording, recordingUri, isProcessing, sessionResult, resetSession } = useVoiceStore();
+    const { sessionResult, resetSession } = useVoiceStore();
     const { t } = useTranslation();
     const { analyzeSession } = useSessionFeedback();
+    const [mode, setMode] = useState<PracticeMode>('selection');
 
-    const handleToggleRecording = async () => {
-        if (isRecording) {
-            const uri = await stopRecording();
-            if (uri) {
-                await analyzeSession(uri);
-            }
-        } else {
-            await startRecording();
-        }
+    const handleFinishDaily = async () => {
+        // Simulating analyzing the full daily session
+        await analyzeSession('mock-uri');
     };
 
     if (sessionResult) {
         return (
             <Container safe centered>
-                <FeedbackView onContinue={resetSession} />
+                <FeedbackView onContinue={() => {
+                    resetSession();
+                    setMode('selection');
+                }} />
             </Container>
         );
     }
 
     return (
         <Container safe centered>
-            <View className="flex-1 justify-center items-center w-full space-y-8 gap-8">
 
-                {/* Header & Explanation */}
-                <View className="items-center px-4">
-                    <Text className="text-3xl font-bold text-slate-900 dark:text-white mb-2 text-center">
-                        {t.practice.title}
+            {mode === 'selection' && (
+                <View className="flex-1 w-full justify-center px-2">
+                    <Text className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">
+                        {t.practice.modes.title}
                     </Text>
-                    <View className="flex-row items-start bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mt-2">
-                        <Info size={20} color="#3b82f6" className="mr-2 mt-0.5" />
-                        <Text className="text-sm text-slate-600 dark:text-slate-300 flex-1 leading-relaxed">
-                            {t.practice.explanation.replace(/\*\*(.*?)\*\*/g, '$1')}
-                        </Text>
+
+                    <View className="space-y-4 gap-4">
+                        <TouchableOpacity
+                            onPress={() => setMode('daily')}
+                            className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex-row items-center"
+                        >
+                            <View className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full mr-4">
+                                <Calendar size={24} className="text-blue-600 dark:text-blue-400" />
+                            </View>
+                            <View className="flex-1">
+                                <Text className="text-lg font-bold text-slate-900 dark:text-white">{t.practice.modes.daily.title}</Text>
+                                <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t.practice.modes.daily.desc}</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => setMode('interview')}
+                            className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex-row items-center"
+                        >
+                            <View className="bg-purple-100 dark:bg-purple-900/30 p-3 rounded-full mr-4">
+                                <Briefcase size={24} className="text-purple-600 dark:text-purple-400" />
+                            </View>
+                            <View className="flex-1">
+                                <Text className="text-lg font-bold text-slate-900 dark:text-white">{t.practice.modes.interview.title}</Text>
+                                <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t.practice.modes.interview.desc}</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            activeOpacity={0.6}
+                            className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex-row items-center opacity-50"
+                        >
+                            <View className="bg-green-100 dark:bg-green-900/30 p-3 rounded-full mr-4">
+                                <Mic size={24} className="text-green-600 dark:text-green-400" />
+                            </View>
+                            <View className="flex-1">
+                                <Text className="text-lg font-bold text-slate-900 dark:text-white">{t.practice.modes.free.title}</Text>
+                                <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1 mb-1">{t.practice.modes.free.desc}</Text>
+                                <View className="bg-slate-100 dark:bg-slate-700 self-start px-2 py-0.5 rounded">
+                                    <Text className="text-[10px] font-bold text-slate-500 dark:text-slate-300 uppercase">Coming Soon</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
+            )}
 
-                {/* Visualizer Area */}
-                <View className="h-64 justify-center items-center">
-                    <Text className="text-slate-500 dark:text-slate-400 mb-6 font-medium">
-                        {isRecording ? t.practice.statusListening : t.practice.statusIdle}
-                    </Text>
-                    <VoiceVisualizer isRecording={isRecording} />
+            {mode === 'daily' && (
+                <DailyStandup onFinish={handleFinishDaily} />
+            )}
+
+            {mode === 'interview' && (
+                <View className="flex-1 items-center justify-center">
+                    <Text className="text-slate-500">Job Interview Mode coming next...</Text>
+                    <TouchableOpacity onPress={() => setMode('selection')} className="mt-4 p-4">
+                        <Text className="text-blue-500 font-bold">Go Back</Text>
+                    </TouchableOpacity>
                 </View>
+            )}
 
-                {/* Controls */}
-                <View className="w-full px-8">
-                    <Button
-                        label={isRecording ? t.practice.btnStop : t.practice.btnStart}
-                        variant={isRecording ? "destructive" : "primary"}
-                        size="lg"
-                        onPress={handleToggleRecording}
-                        isLoading={isProcessing}
-                        disabled={!hasPermission}
-                    />
-                    {!hasPermission && (
-                        <Text className="text-red-500 text-sm text-center mt-2">
-                            {t.practice.permRequired}
-                        </Text>
-                    )}
-                </View>
-
-                {recordingUri && !isRecording && (
-                    <Text className="text-xs text-slate-400">
-                        {t.practice.lastRecording}: ...{recordingUri.slice(-15)}
-                    </Text>
-                )}
-            </View>
         </Container>
     );
 }

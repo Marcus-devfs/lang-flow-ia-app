@@ -41,6 +41,28 @@ const TRANSLATIONS = {
             lastRecording: "Última gravação",
             savedAlertTitle: "Gravação Salva",
             savedAlertMsg: "Áudio pronto para análise.",
+            modes: {
+                title: "Escolha o Cenário",
+                daily: {
+                    title: "Daily Standup",
+                    desc: "Simule sua reunião diária (Yesterday, Today, Blockers)."
+                },
+                interview: {
+                    title: "Job Interview",
+                    desc: "Perguntas comportamentais e técnicas."
+                },
+                free: {
+                    title: "Conversa Livre",
+                    desc: "Fale sobre qualquer assunto técnico."
+                }
+            },
+            daily: {
+                step1: "O que você fez ontem?",
+                step2: "O que você fará hoje?",
+                step3: "Existe algum impedimento?",
+                next: "Próximo Passo",
+                finish: "Finalizar Daily",
+            },
             feedback: {
                 title: "Análise da Sessão",
                 original: "O que você disse (Transcrição)",
@@ -48,7 +70,7 @@ const TRANSLATIONS = {
                 pronunciation: "Palavras-Chave & Pronúncia",
                 saveToVocab: "Salvar no Vocabulário",
                 saved: "Salvo!",
-                continue: "Nova Prática",
+                continue: "Continuar Prática",
             }
         },
         vocabulary: {
@@ -114,6 +136,28 @@ const TRANSLATIONS = {
             lastRecording: "Last recording",
             savedAlertTitle: "Recording Saved",
             savedAlertMsg: "Audio ready for analysis.",
+            modes: {
+                title: "Choose Scenario",
+                daily: {
+                    title: "Daily Standup",
+                    desc: "Simulate your daily meeting (Yesterday, Today, Blockers)."
+                },
+                interview: {
+                    title: "Job Interview",
+                    desc: "Behavioral and technical questions."
+                },
+                free: {
+                    title: "Free Talk",
+                    desc: "Talk about any technical topic."
+                }
+            },
+            daily: {
+                step1: "What did you do yesterday?",
+                step2: "What will you do today?",
+                step3: "Any blockers?",
+                next: "Next Step",
+                finish: "Finish Daily",
+            },
             feedback: {
                 title: "Session Analysis",
                 original: "What you said (Transcript)",
@@ -121,7 +165,7 @@ const TRANSLATIONS = {
                 pronunciation: "Key Words & Pronunciation",
                 saveToVocab: "Save to Vocabulary",
                 saved: "Saved!",
-                continue: "New Practice",
+                continue: "Continue Practice",
             }
         },
         vocabulary: {
