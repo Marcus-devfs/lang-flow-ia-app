@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { useUserStore } from '../../src/store/useUserStore';
 import { useGamificationStore } from '../../src/store/useGamificationStore';
@@ -7,7 +7,7 @@ import { useTranslation } from '../../src/hooks/useTranslation';
 import { User as UserIcon, Settings, Code, Target, Trash2, LogOut, Cpu, Database, Smartphone, Cloud, Layers, Award } from 'lucide-react-native';
 import { Button } from '../../src/components/Button';
 import clsx from 'clsx';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
     const user = useUserStore(state => state.user);
@@ -21,7 +21,6 @@ export default function ProfileScreen() {
     const { dailyGoalMinutes, dailyGoalCards, setDailyGoals, resetDailyGoals } = useGamificationStore();
     const { t } = useTranslation();
     const router = useRouter();
-
 
     // Categorized Stacks
     const stackCategories = [
@@ -50,6 +49,9 @@ export default function ProfileScreen() {
         );
     };
 
+    const handleSetBR = useCallback(() => setCountry('BR'), [setCountry]);
+    const handleSetUS = useCallback(() => setCountry('US'), [setCountry]);
+
     const goalOptions = [
         { level: 'Casual', min: 5, cards: 5, color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20', border: 'border-green-200 dark:border-green-900' },
         { level: 'Regular', min: 15, cards: 15, color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-900' },
@@ -64,32 +66,32 @@ export default function ProfileScreen() {
                 {/* Header */}
                 <View className="flex-row justify-between items-center mb-6 px-4">
                     <Text className="text-3xl font-bold text-slate-900 dark:text-white">{t.profile.title}</Text>
-                    <Pressable className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
+                    <TouchableOpacity className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full">
                         <Settings size={20} className="text-slate-500" />
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Language Selector */}
                 <View className="px-4 mb-8">
                     <View className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex-row">
-                        <Pressable
-                            onPress={() => setCountry('BR')}
+                        <TouchableOpacity
+                            onPress={handleSetBR}
                             className={clsx(
                                 "flex-1 py-2 rounded-lg items-center justify-center",
                                 country === 'BR' && "bg-white dark:bg-slate-700 shadow-sm"
                             )}
                         >
                             <Text className={clsx("font-bold", country === 'BR' ? "text-slate-900 dark:text-white" : "text-slate-500")}>🇧🇷 Português</Text>
-                        </Pressable>
-                        <Pressable
-                            onPress={() => setCountry('US')}
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={handleSetUS}
                             className={clsx(
                                 "flex-1 py-2 rounded-lg items-center justify-center",
                                 country !== 'BR' && "bg-white dark:bg-slate-700 shadow-sm"
                             )}
                         >
                             <Text className={clsx("font-bold", country !== 'BR' ? "text-slate-900 dark:text-white" : "text-slate-500")}>🇺🇸 English</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -124,7 +126,7 @@ export default function ProfileScreen() {
                         {goalOptions.map((opt) => {
                             const isActive = dailyGoalMinutes === opt.min;
                             return (
-                                <Pressable
+                                <TouchableOpacity
                                     key={opt.level}
                                     onPress={() => setDailyGoals(opt.min, opt.cards)}
                                     className={clsx(
@@ -138,7 +140,7 @@ export default function ProfileScreen() {
                                     <Text className="text-xs text-slate-500 dark:text-slate-400">
                                         {opt.min} min / {opt.cards} cards
                                     </Text>
-                                </Pressable>
+                                </TouchableOpacity>
                             )
                         })}
                     </View>
@@ -146,24 +148,25 @@ export default function ProfileScreen() {
 
                 {/* Placement Test CTA */}
                 <View className="px-4 mb-10">
-                    <Pressable
-                        className="bg-purple-600 p-5 rounded-3xl shadow-lg shadow-purple-300 dark:shadow-purple-900 overflow-hidden relative"
-                        onPress={() => router.push('/placement-test')}
-                    >
-                        <View className="absolute top-0 right-0 p-4 opacity-20">
-                            <Award size={100} color="white" />
-                        </View>
-                        <View className="flex-row items-center mb-2 gap-2">
-                            <Award size={24} className="text-white" />
-                            <Text className="text-white font-extrabold text-lg uppercase tracking-wider">Level Check</Text>
-                        </View>
-                        <Text className="text-purple-100 text-base mb-4 font-medium mr-12">
-                            Not sure about your level? Take our 2-minute placement test to find out.
-                        </Text>
-                        <View className="bg-white/20 self-start px-4 py-2 rounded-full backdrop-blur-md">
-                            <Text className="text-white font-bold text-sm">Start Test</Text>
-                        </View>
-                    </Pressable>
+                    <Link href="/placement-test" asChild>
+                        <TouchableOpacity
+                            className="bg-purple-600 p-5 rounded-3xl shadow-lg shadow-purple-300 dark:shadow-purple-900 overflow-hidden relative"
+                        >
+                            <View className="absolute top-0 right-0 p-4 opacity-20">
+                                <Award size={100} color="white" />
+                            </View>
+                            <View className="flex-row items-center mb-2 gap-2">
+                                <Award size={24} className="text-white" />
+                                <Text className="text-white font-extrabold text-lg uppercase tracking-wider">Level Check</Text>
+                            </View>
+                            <Text className="text-purple-100 text-base mb-4 font-medium mr-12">
+                                Not sure about your level? Take our 2-minute placement test to find out.
+                            </Text>
+                            <View className="bg-white/20 self-start px-4 py-2 rounded-full backdrop-blur-md">
+                                <Text className="text-white font-bold text-sm">Start Test</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </Link>
                 </View>
 
                 {/* Interview Prep */}
@@ -172,18 +175,19 @@ export default function ProfileScreen() {
                         <Code size={20} className="text-indigo-500" />
                         <Text className="text-lg font-bold text-slate-900 dark:text-white">Interview Prep</Text>
                     </View>
-                    <Pressable
-                        className="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 flex-row items-center justify-between"
-                        onPress={() => router.push('/intro-builder')}
-                    >
-                        <View className="flex-1 mr-4">
-                            <Text className="text-indigo-900 dark:text-indigo-100 font-bold text-lg mb-1">"Tell Me About Yourself"</Text>
-                            <Text className="text-indigo-600 dark:text-indigo-300 text-sm">Build your perfect 30-second elevator pitch for interviews.</Text>
-                        </View>
-                        <View className="bg-indigo-100 dark:bg-indigo-800 p-3 rounded-full">
-                            <UserIcon size={24} className="text-indigo-600 dark:text-indigo-300" />
-                        </View>
-                    </Pressable>
+                    <Link href="/intro-builder" asChild>
+                        <TouchableOpacity
+                            className="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 flex-row items-center justify-between"
+                        >
+                            <View className="flex-1 mr-4">
+                                <Text className="text-indigo-900 dark:text-indigo-100 font-bold text-lg mb-1">"Tell Me About Yourself"</Text>
+                                <Text className="text-indigo-600 dark:text-indigo-300 text-sm">Build your perfect 30-second elevator pitch for interviews.</Text>
+                            </View>
+                            <View className="bg-indigo-100 dark:bg-indigo-800 p-3 rounded-full">
+                                <UserIcon size={24} className="text-indigo-600 dark:text-indigo-300" />
+                            </View>
+                        </TouchableOpacity>
+                    </Link>
                 </View>
 
                 {/* Tech Stack */}
@@ -202,7 +206,7 @@ export default function ProfileScreen() {
                                 </View>
                                 <View className="flex-row flex-wrap gap-2">
                                     {cat.items.map((tech) => (
-                                        <Pressable
+                                        <TouchableOpacity
                                             key={tech}
                                             onPress={() => toggleStack(tech)}
                                             className={clsx(
@@ -213,7 +217,7 @@ export default function ProfileScreen() {
                                             <Text className={clsx("font-medium text-sm", techStack.includes(tech) ? "text-white" : "text-slate-600 dark:text-slate-300")}>
                                                 {tech}
                                             </Text>
-                                        </Pressable>
+                                        </TouchableOpacity>
                                     ))}
                                 </View>
                             </View>
