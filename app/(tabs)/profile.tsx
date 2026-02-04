@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, ScrollView, Pressable, Alert } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { useUserStore } from '../../src/store/useUserStore';
@@ -16,7 +16,7 @@ export default function ProfileScreen() {
     const setTechStack = useUserStore(state => state.setTechStack);
     const logout = useUserStore(state => state.logout);
     const setCountry = useUserStore(state => state.setCountry);
-    const country = useUserStore(state => state.country);
+    const country = useUserStore(state => state.country); // 'BR' | 'US'
 
     const { dailyGoalMinutes, dailyGoalCards, setDailyGoals, resetDailyGoals } = useGamificationStore();
     const { t } = useTranslation();
@@ -48,13 +48,6 @@ export default function ProfileScreen() {
                 { text: "Reset", style: "destructive", onPress: resetDailyGoals }
             ]
         );
-    };
-
-    const getGoalLevel = () => {
-        if (dailyGoalMinutes <= 5) return 'Casual';
-        if (dailyGoalMinutes <= 15) return 'Regular';
-        if (dailyGoalMinutes <= 30) return 'Serious';
-        return 'Hardcore';
     };
 
     const goalOptions = [
@@ -169,6 +162,26 @@ export default function ProfileScreen() {
                         </Text>
                         <View className="bg-white/20 self-start px-4 py-2 rounded-full backdrop-blur-md">
                             <Text className="text-white font-bold text-sm">Start Test</Text>
+                        </View>
+                    </Pressable>
+                </View>
+
+                {/* Interview Prep */}
+                <View className="px-4 mb-10">
+                    <View className="flex-row items-center mb-4 gap-2">
+                        <Code size={20} className="text-indigo-500" />
+                        <Text className="text-lg font-bold text-slate-900 dark:text-white">Interview Prep</Text>
+                    </View>
+                    <Pressable
+                        className="bg-indigo-50 dark:bg-indigo-900/20 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-800 flex-row items-center justify-between"
+                        onPress={() => router.push('/intro-builder')}
+                    >
+                        <View className="flex-1 mr-4">
+                            <Text className="text-indigo-900 dark:text-indigo-100 font-bold text-lg mb-1">"Tell Me About Yourself"</Text>
+                            <Text className="text-indigo-600 dark:text-indigo-300 text-sm">Build your perfect 30-second elevator pitch for interviews.</Text>
+                        </View>
+                        <View className="bg-indigo-100 dark:bg-indigo-800 p-3 rounded-full">
+                            <UserIcon size={24} className="text-indigo-600 dark:text-indigo-300" />
                         </View>
                     </Pressable>
                 </View>
