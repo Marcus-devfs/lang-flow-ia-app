@@ -7,14 +7,32 @@ import { Check, Plus, Volume2, StopCircle } from 'lucide-react-native';
 import { Button } from './Button';
 import { useTextToSpeech } from '../hooks/useTextToSpeech';
 
-export function FeedbackView({ onContinue }: { onContinue: () => void }) {
+interface FeedbackViewProps {
+    score?: number;
+    feedback?: string;
+    onContinue?: () => void;
+    onNext?: () => void;
+    isLast?: boolean;
+}
+
+export function FeedbackView({ onContinue, onNext, isLast, score, feedback }: FeedbackViewProps) {
     const { sessionResult } = useVoiceStore();
     const { t } = useTranslation();
     const { addCard } = useVocabularyStore();
     const { speak, stop, isSpeaking } = useTextToSpeech();
     const [savedWords, setSavedWords] = React.useState<string[]>([]);
 
-    if (!sessionResult) return null;
+    // Determine what to display: Direct props (Interview Mode) or Store (Drill Mode)
+    // Cast to any to avoid strict type checks on legacy store for now
+    const storeResult = sessionResult as any;
+    const displayFeedback = feedback || storeResult?.analysis || "Assessment Completed";
+    const displayScore = score ?? storeResult?.score ?? 0;
+    const transcript = sessionResult?.correctedTranscript;
+
+    // Only return null if NEITHER exist
+    if (!sessionResult && !feedback) return null;
+
+    const handleContinue = onNext || onContinue;
 
     const handleSave = (word: string) => {
         addCard({
@@ -33,28 +51,48 @@ export function FeedbackView({ onContinue }: { onContinue: () => void }) {
             </Text>
 
             {/* Transcription Analysis */}
-            <View className="bg-white dark:bg-slate-800 p-5 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700">
-                <Text className="text-xs font-bold text-slate-500 uppercase mb-2">
-                    {t.practice.feedback.original}
-                </Text>
-                <Text className="text-slate-600 dark:text-slate-300 text-base mb-4 italic">
-                    "{sessionResult.originalTranscript}"
-                </Text>
-
-                <View className="h-[1px] bg-slate-100 dark:bg-slate-700 mb-4" />
-
-                <View className="flex-row justify-between items-center mb-2">
-                    <Text className="text-xs font-bold text-green-600 uppercase">
-                        {t.practice.feedback.corrected}
+            {/* Simple Feedback Mode (Interview) */}
+            {feedback && (
+                <View className="bg-white dark:bg-slate-800 p-5 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700">
+                    <View className="flex-row items-center justify-between mb-4">
+                        <Text className="text-xs font-bold text-slate-500 uppercase">AI Feedback</Text>
+                        <View className={`px-3 py-1 rounded-full ${displayScore > 70 ? 'bg-green-100' : 'bg-yellow-100'}`}>
+                            <Text className={`font-bold ${displayScore > 70 ? 'text-green-700' : 'text-yellow-700'}`}>
+                                Score: {displayScore}%
+                            </Text>
+                        </View>
+                    </View>
+                    <Text className="text-slate-800 dark:text-slate-300 text-lg leading-relaxed">
+                        {feedback}
                     </Text>
-                    <TouchableOpacity onPress={() => isSpeaking ? stop() : speak(sessionResult.correctedTranscript)}>
-                        {isSpeaking ? <StopCircle size={16} className="text-green-600" /> : <Volume2 size={16} className="text-green-600" />}
-                    </TouchableOpacity>
                 </View>
-                <Text className="text-slate-800 dark:text-green-400 text-base font-medium">
-                    "{sessionResult.correctedTranscript}"
-                </Text>
-            </View>
+            )}
+
+            {/* Detailed Transcript Mode (Drill) */}
+            {sessionResult && !feedback && (
+                <View className="bg-white dark:bg-slate-800 p-5 rounded-2xl mb-6 border border-slate-100 dark:border-slate-700">
+                    <Text className="text-xs font-bold text-slate-500 uppercase mb-2">
+                        {t.practice.feedback.original}
+                    </Text>
+                    <Text className="text-slate-600 dark:text-slate-300 text-base mb-4 italic">
+                        "{sessionResult.originalTranscript}"
+                    </Text>
+
+                    <View className="h-[1px] bg-slate-100 dark:bg-slate-700 mb-4" />
+
+                    <View className="flex-row justify-between items-center mb-2">
+                        <Text className="text-xs font-bold text-green-600 uppercase">
+                            {t.practice.feedback.corrected}
+                        </Text>
+                        <TouchableOpacity onPress={() => isSpeaking ? stop() : speak(sessionResult.correctedTranscript)}>
+                            {isSpeaking ? <StopCircle size={16} className="text-green-600" /> : <Volume2 size={16} className="text-green-600" />}
+                        </TouchableOpacity>
+                    </View>
+                    <Text className="text-slate-800 dark:text-green-400 text-base font-medium">
+                        "{sessionResult.correctedTranscript}"
+                    </Text>
+                </View>
+            )}
 
             {/* Key Words & Pronunciation */}
             <View className="mb-6">
@@ -63,7 +101,7 @@ export function FeedbackView({ onContinue }: { onContinue: () => void }) {
                 </Text>
 
                 <View className="flex-row flex-wrap gap-3">
-                    {sessionResult.keywords.map((kw, index) => {
+                    {sessionResult?.keywords?.map((kw, index) => {
                         const isSaved = savedWords.includes(kw.word);
                         let scoreColor = 'bg-slate-100 text-slate-700 border-slate-200';
                         if (kw.category === 'green') scoreColor = 'bg-green-100 text-green-800 border-green-200';
@@ -98,7 +136,12 @@ export function FeedbackView({ onContinue }: { onContinue: () => void }) {
                 </View>
             </View>
 
-            <Button label={t.practice.feedback.continue} onPress={onContinue} size="lg" className="mb-8" />
+            <Button
+                label={isLast ? t.practice.interview.finish : (t.practice.feedback.continue || "Continue")}
+                onPress={handleContinue || (() => { })}
+                size="lg"
+                className="mb-8"
+            />
         </ScrollView>
     );
 }
