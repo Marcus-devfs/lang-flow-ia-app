@@ -8,7 +8,7 @@ import { useTranslation } from '../../src/hooks/useTranslation';
 import { User as UserIcon, Settings, Code, Target, Trash2, LogOut } from 'lucide-react-native';
 
 export default function ProfileScreen() {
-    const { user, techStack, setTechStack, logout } = useUserStore();
+    const { user, techStack, englishLevel, setTechStack, logout } = useUserStore();
     const { dailyGoalMinutes, dailyGoalCards, setDailyGoals, resetDailyGoals } = useGamificationStore();
     const { t } = useTranslation();
 
@@ -51,8 +51,13 @@ export default function ProfileScreen() {
                             <UserIcon size={32} className="text-blue-600 dark:text-blue-400" />
                         </View>
                         <View>
-                            <Text className="text-xl font-bold text-slate-900 dark:text-white">Developer</Text>
-                            <Text className="text-slate-500 dark:text-slate-400">@{techStack[0] || 'Dev'}</Text>
+                            <Text className="text-xl font-bold text-slate-900 dark:text-white">{user?.name || 'Developer'}</Text>
+                            <View className="flex-row items-center mt-1">
+                                <Text className="text-slate-500 dark:text-slate-400 mr-2">@{techStack[0] || 'Dev'}</Text>
+                                <View className="bg-slate-100 dark:bg-slate-700 pk-2 py-0.5 rounded px-2">
+                                    <Text className="text-xs font-bold text-slate-600 dark:text-slate-300">{englishLevel}</Text>
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View>
