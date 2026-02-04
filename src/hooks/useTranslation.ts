@@ -9,6 +9,16 @@ const TRANSLATIONS = {
             immersion: "Imersão",
             practice: "Prática",
             vocabulary: "Vocabulário",
+            profile: "Perfil",
+        },
+        profile: {
+            title: "Meu Perfil",
+            techStack: "Minha Stack",
+            goals: "Metas Diárias",
+            voiceGoal: "Meta de Voz (min)",
+            cardsGoal: "Meta de Cards",
+            reset: "Resetar Progresso",
+            logout: "Sair",
         },
         gamification: {
             dailyGoal: "Meta Diária",
@@ -104,6 +114,16 @@ const TRANSLATIONS = {
             immersion: "Immersion",
             practice: "Practice",
             vocabulary: "Vocabulary",
+            profile: "Profile",
+        },
+        profile: {
+            title: "My Profile",
+            techStack: "My Stack",
+            goals: "Daily Goals",
+            voiceGoal: "Voice Goal (min)",
+            cardsGoal: "Cards Goal",
+            reset: "Reset Progress",
+            logout: "Log Out",
         },
         gamification: {
             dailyGoal: "Daily Goal",

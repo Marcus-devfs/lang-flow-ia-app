@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Home, Mic, Layers } from 'lucide-react-native';
+import { Home, Mic, Layers, User } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { useTranslation } from '../../src/hooks/useTranslation';
 
@@ -45,6 +45,13 @@ export default function TabLayout() {
                 options={{
                     title: t.tabs.vocabulary,
                     tabBarIcon: ({ color, size }) => <Layers color={color} size={size} />,
+                }}
+            />
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: t.tabs.profile,
+                    tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
                 }}
             />
         </Tabs>
