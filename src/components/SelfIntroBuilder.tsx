@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardTypeOptions } from 'react-native';
 import { useUserStore } from '../store/useUserStore';
 import { Button } from './Button';
 import { ArrowRight, ArrowLeft, CheckCircle, Copy, PlayCircle, StopCircle } from 'lucide-react-native';
@@ -23,7 +23,15 @@ export function SelfIntroBuilder({ onFinish }: { onFinish: () => void }) {
         setData(prev => ({ ...prev, [key]: value }));
     };
 
-    const steps = [
+    interface StepField {
+        label: string;
+        key: string;
+        placeholder: string;
+        keyboardType?: KeyboardTypeOptions;
+        multiline?: boolean;
+    }
+
+    const steps: { title: string; description: string; fields: StepField[] }[] = [
         {
             title: "The Hook",
             description: "Start strong. Who are you and what do you do?",
@@ -135,7 +143,7 @@ I'm passionate about ${data.goal}, which is why I'm excited about this opportuni
                                 placeholderTextColor="#94a3b8"
                                 value={(data as any)[field.key]}
                                 onChangeText={(text) => updateData(field.key, text)}
-                                keyboardType={field.keyboardType as any}
+                                keyboardType={field.keyboardType}
                                 multiline={field.multiline}
                             />
                         </View>
