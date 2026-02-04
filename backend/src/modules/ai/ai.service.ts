@@ -132,4 +132,50 @@ export class AIService {
             ];
         }
     }
+
+    async generateStandupFeedback(text: string, techStack: string[]): Promise<any> {
+        const prompt = `
+        Act as a Senior Tech Lead coaching a developer on their English Daily Standup update.
+        
+        Developer's Stack: ${techStack.join(', ')}
+        Developer's Update: "${text}"
+        
+        Task:
+        1. Correct grammatical errors.
+        2. Improve professionalism and clarity (conciseness is key in standups).
+        3. Convert "I'm stuck" or weak phrasing into professional "blocker" language.
+        
+        Return ONLY a JSON object with:
+        {
+            "score": number (0-100 based on clarity and grammar),
+            "improvedVersion": "string (The optimized version)",
+            "mistakes": ["string (List of specific grammar/vocab corrections made)"],
+            "professionalTips": ["string (Advice on tone/delivery)"]
+        }
+        `;
+
+        try {
+            const result = await this.model.generateContent(prompt);
+            const response = result.response;
+            const textResp = response.text();
+
+            const cleanJson = textResp.replace(/```json/g, '').replace(/```/g, '').trim();
+            // Basic extraction if needed, though objects usually parse fine
+            const jsonMatch = cleanJson.match(/\{[\s\S]*\}/);
+
+            if (jsonMatch) {
+                return JSON.parse(jsonMatch[0]);
+            }
+            return JSON.parse(cleanJson);
+
+        } catch (error) {
+            console.error("AI Standup Feedback Error:", error);
+            return {
+                score: 50,
+                improvedVersion: text,
+                mistakes: ["Could not analyze at this time."],
+                professionalTips: ["Try again later."]
+            };
+        }
+    }
 }

@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { FeedModule } from './modules/feed/feed.module';
+import { StandupModule } from './modules/standup/standup.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FeedModule } from './modules/feed/feed.module';
     }),
     InterviewModule,
     FeedModule,
+    StandupModule,
   ],
   controllers: [AppController],
   providers: [AppService],
