@@ -78,4 +78,58 @@ export class AIService {
             ];
         }
     }
+
+    async generateFeed(techStack: string[], englishLevel: string): Promise<any[]> {
+        const prompt = `
+        Act as a Senior Tech Mentor curating a study feed for a developer.
+        
+        User Profile:
+        - Tech Stack: ${techStack.join(', ')}
+        - English Level: ${englishLevel}
+        
+        Task:
+        Generate 5 specific, high-quality study resources (articles, videos, documentation). 
+        These must be REAL, existing resources from reputable sources.
+        
+        Return ONLY a JSON ARRAY of objects. Do not include any conversational text.
+        Schema:
+        [
+            {
+                "id": "string",
+                "title": "string",
+                "category": "React | Node | AWS | System Design | Soft Skills",
+                "level": "Beginner | Intermediate | Advanced",
+                "duration": "string",
+                "source": "string",
+                "thumbnailColor": "string",
+                "url": "string",
+                "aiMatchingScore": number,
+                "aiReasoning": "string"
+            }
+        ]
+        `;
+
+        try {
+            const result = await this.model.generateContent(prompt);
+            const response = result.response;
+            const text = response.text();
+
+            // Extract JSON array from the response
+            const jsonMatch = text.match(/\[[\s\S]*\]/);
+            if (!jsonMatch) {
+                throw new Error("No JSON array found in response: " + text.substring(0, 100));
+            }
+
+            const items = JSON.parse(jsonMatch[0]);
+
+            return items.sort((a: any, b: any) => b.aiMatchingScore - a.aiMatchingScore);
+
+        } catch (error) {
+            console.error("AI Feed Generation Error:", error);
+            // Fallback content if AI fails
+            return [
+                { id: '1', title: 'React Documentation', category: 'React', level: 'Beginner', duration: 'Docs', source: 'React.dev', thumbnailColor: 'bg-blue-500', url: 'https://react.dev', aiMatchingScore: 90, aiReasoning: 'Essential reference.' }
+            ];
+        }
+    }
 }

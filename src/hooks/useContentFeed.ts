@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { useUserStore } from '../store/useUserStore';
+
 export interface FeedItem {
     id: string;
     title: string;
@@ -6,16 +9,45 @@ export interface FeedItem {
     duration: string;
     source: string;
     thumbnailColor: string;
+    url: string;
+    aiMatchingScore: number;
+    aiReasoning: string;
 }
 
 export function useContentFeed() {
-    const feed: FeedItem[] = [
-        { id: '1', title: 'React Server Components Explained', category: 'React', level: 'Advanced', duration: '12 min', source: 'React Labs', thumbnailColor: 'bg-blue-500' },
-        { id: '2', title: 'Node.js Event Loop Deep Dive', category: 'Node', level: 'Intermediate', duration: '8 min', source: 'Node Weekly', thumbnailColor: 'bg-green-500' },
-        { id: '3', title: 'System Design Interview Basics', category: 'System Design', level: 'Beginner', duration: '15 min', source: 'ByteByteGo', thumbnailColor: 'bg-purple-500' },
-        { id: '4', title: 'AWS Lambda vs EC2', category: 'AWS', level: 'Intermediate', duration: '10 min', source: 'Cloud Guru', thumbnailColor: 'bg-orange-500' },
-        { id: '5', title: 'Negotiating Your Salary', category: 'Soft Skills', level: 'Advanced', duration: '20 min', source: 'Tech Lead', thumbnailColor: 'bg-pink-500' },
-    ];
+    const { techStack, englishLevel } = useUserStore();
+    const [feed, setFeed] = useState<FeedItem[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    return { feed };
+    useEffect(() => {
+        const fetchFeed = async () => {
+            setIsLoading(true);
+            try {
+                // Using 10.0.2.2 for Android Emulator support if needed, or localhost
+                const apiUrl = 'http://localhost:3000/feed/personalized';
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ techStack, englishLevel })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setFeed(data);
+                } else {
+                    console.error("Feed API Error:", response.status);
+                    // Keep empty or implementation fallback if needed
+                }
+            } catch (error) {
+                console.error("Feed Fetch Error:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchFeed();
+    }, [techStack, englishLevel]);
+
+    return { feed, isLoading };
 }

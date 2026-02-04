@@ -5,6 +5,8 @@ import { InterviewModule } from './modules/interview/interview.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { FeedModule } from './modules/feed/feed.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,6 +20,7 @@ import { AppService } from './app.service';
       inject: [ConfigService],
     }),
     InterviewModule,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
