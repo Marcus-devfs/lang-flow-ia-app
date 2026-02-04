@@ -4,9 +4,10 @@ import { Container } from '../../src/components/Container';
 import { useUserStore } from '../../src/store/useUserStore';
 import { useGamificationStore } from '../../src/store/useGamificationStore';
 import { useTranslation } from '../../src/hooks/useTranslation';
-import { User as UserIcon, Settings, Code, Target, Trash2, LogOut, Cpu, Database, Smartphone, Cloud, Layers } from 'lucide-react-native';
+import { User as UserIcon, Settings, Code, Target, Trash2, LogOut, Cpu, Database, Smartphone, Cloud, Layers, Award } from 'lucide-react-native';
 import { Button } from '../../src/components/Button';
 import clsx from 'clsx';
+import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
     const user = useUserStore(state => state.user);
@@ -19,6 +20,7 @@ export default function ProfileScreen() {
 
     const { dailyGoalMinutes, dailyGoalCards, setDailyGoals, resetDailyGoals } = useGamificationStore();
     const { t } = useTranslation();
+    const router = useRouter();
 
 
     // Categorized Stacks
@@ -147,6 +149,28 @@ export default function ProfileScreen() {
                             )
                         })}
                     </View>
+                </View>
+
+                {/* Placement Test CTA */}
+                <View className="px-4 mb-10">
+                    <Pressable
+                        className="bg-purple-600 p-5 rounded-3xl shadow-lg shadow-purple-300 dark:shadow-purple-900 overflow-hidden relative"
+                        onPress={() => router.push('/placement-test')}
+                    >
+                        <View className="absolute top-0 right-0 p-4 opacity-20">
+                            <Award size={100} color="white" />
+                        </View>
+                        <View className="flex-row items-center mb-2 gap-2">
+                            <Award size={24} className="text-white" />
+                            <Text className="text-white font-extrabold text-lg uppercase tracking-wider">Level Check</Text>
+                        </View>
+                        <Text className="text-purple-100 text-base mb-4 font-medium mr-12">
+                            Not sure about your level? Take our 2-minute placement test to find out.
+                        </Text>
+                        <View className="bg-white/20 self-start px-4 py-2 rounded-full backdrop-blur-md">
+                            <Text className="text-white font-bold text-sm">Start Test</Text>
+                        </View>
+                    </Pressable>
                 </View>
 
                 {/* Tech Stack */}

@@ -13,7 +13,7 @@ interface UserState {
     user: User | null;
     country: 'BR' | 'US' | 'CA' | 'World' | null;
     techStack: string[];
-    englishLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+    englishLevel: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Beginner' | 'Intermediate' | 'Advanced'; // Keeping legacy for migration safety
     hasCompletedOnboarding: boolean;
     isAuthenticated: boolean;
     isLoading: boolean;
@@ -23,7 +23,7 @@ interface UserActions {
     setUser: (user: User) => void;
     setCountry: (country: 'BR' | 'US' | 'CA' | 'World') => void;
     setTechStack: (stack: string[]) => void;
-    setEnglishLevel: (level: 'Beginner' | 'Intermediate' | 'Advanced') => void;
+    setEnglishLevel: (level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Beginner' | 'Intermediate' | 'Advanced') => void;
     completeOnboarding: () => void;
     logout: () => void;
     setLoading: (isLoading: boolean) => void;
@@ -35,7 +35,7 @@ export const useUserStore = create<UserState & UserActions>()(
             user: null,
             country: 'BR',
             techStack: ['React', 'TypeScript'],
-            englishLevel: 'Intermediate',
+            englishLevel: 'B1',
             hasCompletedOnboarding: false,
             isAuthenticated: false,
             isLoading: false,

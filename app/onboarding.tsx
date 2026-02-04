@@ -15,7 +15,7 @@ export default function OnboardingScreen() {
 
     // Step 2 State
     const [name, setName] = useState('');
-    const [level, setLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Intermediate');
+    const [level, setLevel] = useState<'A1' | 'B1' | 'C1'>('B1');
 
     // Step 3 State
     const [selectedStack, setSelectedStack] = useState<string[]>(['React']);
@@ -93,16 +93,23 @@ export default function OnboardingScreen() {
 
                             <View>
                                 <Text className="font-bold text-slate-700 dark:text-slate-300 mb-3">English Level</Text>
-                                {['Beginner', 'Intermediate', 'Advanced'].map((lvl) => (
+                                {[
+                                    { id: 'A1', label: 'Beginner (A1-A2)', desc: 'I construct simple sentences.' },
+                                    { id: 'B1', label: 'Intermediate (B1-B2)', desc: 'I can communicate with some effort.' },
+                                    { id: 'C1', label: 'Advanced (C1-C2)', desc: 'I am fluent or near-fluent.' }
+                                ].map((choice) => (
                                     <TouchableOpacity
-                                        key={lvl}
-                                        onPress={() => setLevel(lvl as any)}
-                                        className={`p-4 rounded-xl border mb-3 flex-row items-center justify-between ${level === lvl ? 'bg-blue-50 border-blue-500 dark:bg-blue-900/20 dark:border-blue-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+                                        key={choice.id}
+                                        onPress={() => setLevel(choice.id as any)}
+                                        className={`p-4 rounded-xl border mb-3 flex-row items-center justify-between ${level === choice.id ? 'bg-blue-50 border-blue-500 dark:bg-blue-900/20 dark:border-blue-500' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
                                     >
-                                        <Text className={`font-bold text-lg ${level === lvl ? 'text-blue-700 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>
-                                            {lvl}
-                                        </Text>
-                                        {level === lvl && <Check size={20} className="text-blue-500" />}
+                                        <View>
+                                            <Text className={`font-bold text-lg ${level === choice.id ? 'text-blue-700 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300'}`}>
+                                                {choice.label}
+                                            </Text>
+                                            <Text className="text-sm text-slate-500 dark:text-slate-400 mt-1">{choice.desc}</Text>
+                                        </View>
+                                        {level === choice.id && <Check size={20} className="text-blue-500" />}
                                     </TouchableOpacity>
                                 ))}
                             </View>
