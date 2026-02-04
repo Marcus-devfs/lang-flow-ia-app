@@ -4,40 +4,21 @@ import { Container } from '../../src/components/Container';
 import { Button } from '../../src/components/Button';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '../../src/store/useUserStore';
-import { Globe, MapPin } from 'lucide-react-native';
-
-const TRANSLATIONS = {
-    BR: {
-        title: 'LangFlow AI',
-        subtitle: 'Domine o Inglês Técnico para Engenharia através de prática de voz e vocabulário imersivo.',
-        ctaPrimary: 'Iniciar Prática Diária',
-        ctaSecondary: 'Revisar Vocabulário',
-        selectCountry: 'Selecione sua origem:',
-    },
-    EN: {
-        title: 'LangFlow AI',
-        subtitle: 'Master English for Engineering through voice practice and immersive vocabulary.',
-        ctaPrimary: 'Start Daily Practice',
-        ctaSecondary: 'Review Vocabulary',
-        selectCountry: 'Select your origin:',
-    },
-};
+import { useTranslation } from '../../src/hooks/useTranslation';
 
 export default function ImmersionScreen() {
     const router = useRouter();
     const { country, setCountry } = useUserStore();
-
-    const isBr = country === 'BR';
-    const t = isBr ? TRANSLATIONS.BR : TRANSLATIONS.EN;
+    const { t } = useTranslation();
 
     return (
         <Container safe centered>
             <View className="flex-1 w-full justify-center">
 
                 {/* Country Selector Header */}
-                <View className="mb-12">
+                <View className="mb-10">
                     <Text className="text-sm text-slate-500 dark:text-slate-400 font-medium mb-3 text-center uppercase tracking-wider">
-                        {t.selectCountry}
+                        {t.common.languageSelector}
                     </Text>
                     <View className="flex-row justify-center space-x-4 gap-4">
                         <TouchableOpacity
@@ -62,23 +43,30 @@ export default function ImmersionScreen() {
                 <View className="items-center space-y-8 gap-6">
                     <View className="items-center">
                         <Text className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
-                            {t.title}
+                            {t.immersion.title}
                         </Text>
                         <Text className="text-lg text-slate-600 dark:text-slate-300 text-center leading-relaxed px-4">
-                            {t.subtitle}
+                            {t.immersion.subtitle}
                         </Text>
+
+                        {/* Explanation Block */}
+                        <View className="mt-4 bg-slate-100 dark:bg-slate-800 p-4 rounded-xl">
+                            <Text className="text-sm text-slate-500 dark:text-slate-400 text-center italic">
+                                {t.immersion.explanation.replace(/\*\*(.*?)\*\*/g, '$1')}
+                            </Text>
+                        </View>
                     </View>
 
                     <View className="w-full space-y-4 gap-4 mt-8">
                         <Button
-                            label={t.ctaPrimary}
+                            label={t.immersion.ctaPrimary}
                             onPress={() => router.push('/practice')}
                             size="lg"
                             className="w-full shadow-lg shadow-blue-500/30"
                         />
 
                         <Button
-                            label={t.ctaSecondary}
+                            label={t.immersion.ctaSecondary}
                             variant="secondary"
                             onPress={() => router.push('/vocabulary')}
                             size="lg"
