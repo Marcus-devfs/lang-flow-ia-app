@@ -8,6 +8,7 @@ interface ButtonProps extends TouchableOpacityProps {
     variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
     size?: 'sm' | 'md' | 'lg';
     icon?: LucideIcon;
+    textClassName?: string;
 }
 
 export function Button({
@@ -16,6 +17,7 @@ export function Button({
     size = 'md',
     className,
     icon: Icon,
+    textClassName,
     ...props
 }: ButtonProps) {
 
@@ -49,7 +51,7 @@ export function Button({
             activeOpacity={0.7}
             {...props}
         >
-            <Text className={clsx("font-bold text-base", textColors[variant])}>
+            <Text className={clsx("font-bold text-base", textColors[variant], textClassName)}>
                 {label}
             </Text>
             {Icon && <View className="ml-2"><Icon size={20} color={variant === 'primary' || variant === 'destructive' ? 'white' : '#64748b'} /></View>}
