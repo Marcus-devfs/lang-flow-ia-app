@@ -6,6 +6,7 @@ import { useTranslation } from '../../src/hooks/useTranslation';
 import { useSessionFeedback } from '../../src/hooks/useSessionFeedback';
 import { FeedbackView } from '../../src/components/FeedbackView';
 import { DailyStandup } from '../../src/components/DailyStandup';
+import { JobInterview } from '../../src/components/JobInterview';
 import { Calendar, Briefcase, Mic } from 'lucide-react-native';
 
 type PracticeMode = 'selection' | 'daily' | 'interview' | 'free';
@@ -17,7 +18,10 @@ export default function PracticeScreen() {
     const [mode, setMode] = useState<PracticeMode>('selection');
 
     const handleFinishDaily = async () => {
-        // Simulating analyzing the full daily session
+        await analyzeSession('mock-uri');
+    };
+
+    const handleFinishInterview = async () => {
         await analyzeSession('mock-uri');
     };
 
@@ -92,12 +96,7 @@ export default function PracticeScreen() {
             )}
 
             {mode === 'interview' && (
-                <View className="flex-1 items-center justify-center">
-                    <Text className="text-slate-500">Job Interview Mode coming next...</Text>
-                    <TouchableOpacity onPress={() => setMode('selection')} className="mt-4 p-4">
-                        <Text className="text-blue-500 font-bold">Go Back</Text>
-                    </TouchableOpacity>
-                </View>
+                <JobInterview onFinish={handleFinishInterview} />
             )}
 
         </Container>

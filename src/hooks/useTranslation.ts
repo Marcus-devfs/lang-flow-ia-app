@@ -73,6 +73,11 @@ const TRANSLATIONS = {
                 next: "Próximo Passo",
                 finish: "Finalizar Daily",
             },
+            interview: {
+                nextQuestion: "Próxima Pergunta",
+                finish: "Finalizar Entrevista",
+                question: "Questão",
+            },
             feedback: {
                 title: "Análise da Sessão",
                 original: "O que você disse (Transcrição)",
@@ -177,6 +182,11 @@ const TRANSLATIONS = {
                 step3: "Any blockers?",
                 next: "Next Step",
                 finish: "Finish Daily",
+            },
+            interview: {
+                nextQuestion: "Next Question",
+                finish: "Finish Interview",
+                question: "Question",
             },
             feedback: {
                 title: "Session Analysis",
