@@ -10,12 +10,25 @@ const TRANSLATIONS = {
             practice: "Prática",
             vocabulary: "Vocabulário",
         },
+        gamification: {
+            dailyGoal: "Meta Diária",
+            streak: "Dias seguidos",
+            minutes: "min",
+            cards: "cards",
+        },
         immersion: {
             title: "LangFlow AI",
             subtitle: "Domine o Inglês Técnico para Engenharia através de prática de voz e vocabulário imersivo.",
             explanation: "A aba **Imersão** é seu painel principal. Aqui você seleciona sua preferência de idioma e inicia sua jornada diária.",
             ctaPrimary: "Iniciar Prática Diária",
             ctaSecondary: "Revisar Vocabulário",
+            feedTitle: "Feed de Imersão",
+            filters: {
+                all: "Todos",
+                beginner: "Iniciante",
+                intermediate: "Intermediário",
+                advanced: "Avançado",
+            }
         },
         practice: {
             title: "Prática de Fala",
@@ -28,6 +41,15 @@ const TRANSLATIONS = {
             lastRecording: "Última gravação",
             savedAlertTitle: "Gravação Salva",
             savedAlertMsg: "Áudio pronto para análise.",
+            feedback: {
+                title: "Análise da Sessão",
+                original: "O que você disse (Transcrição)",
+                corrected: "Correção Sugerida",
+                pronunciation: "Palavras-Chave & Pronúncia",
+                saveToVocab: "Salvar no Vocabulário",
+                saved: "Salvo!",
+                continue: "Nova Prática",
+            }
         },
         vocabulary: {
             title: "Vocabulário",
@@ -37,10 +59,18 @@ const TRANSLATIONS = {
             term: "Termo",
             definition: "Definição",
             example: "Exemplo",
+            startQuiz: "Iniciar Quiz",
+            quizMode: "Modo Revisão",
+            tapToReveal: "Toque para ver a resposta",
             mastery: {
                 new: "Novo",
                 learning: "Estudando",
                 mastered: "Dominado",
+            },
+            srs: {
+                hard: "Difícil",
+                good: "Bom",
+                easy: "Fácil",
             }
         }
     },
@@ -53,12 +83,25 @@ const TRANSLATIONS = {
             practice: "Practice",
             vocabulary: "Vocabulary",
         },
+        gamification: {
+            dailyGoal: "Daily Goal",
+            streak: "Day streak",
+            minutes: "min",
+            cards: "cards",
+        },
         immersion: {
             title: "LangFlow AI",
             subtitle: "Master English for Engineering through voice practice and immersive vocabulary.",
             explanation: "The **Immersion** tab is your main dashboard. Here you select your language preference and start your daily journey.",
             ctaPrimary: "Start Daily Practice",
             ctaSecondary: "Review Vocabulary",
+            feedTitle: "Immersion Feed",
+            filters: {
+                all: "All",
+                beginner: "Beginner",
+                intermediate: "Intermediate",
+                advanced: "Advanced",
+            }
         },
         practice: {
             title: "Speaking Practice",
@@ -71,6 +114,15 @@ const TRANSLATIONS = {
             lastRecording: "Last recording",
             savedAlertTitle: "Recording Saved",
             savedAlertMsg: "Audio ready for analysis.",
+            feedback: {
+                title: "Session Analysis",
+                original: "What you said (Transcript)",
+                corrected: "Suggested Correction",
+                pronunciation: "Key Words & Pronunciation",
+                saveToVocab: "Save to Vocabulary",
+                saved: "Saved!",
+                continue: "New Practice",
+            }
         },
         vocabulary: {
             title: "Vocabulary",
@@ -80,10 +132,18 @@ const TRANSLATIONS = {
             term: "Term",
             definition: "Definition",
             example: "Example",
+            startQuiz: "Start Quiz",
+            quizMode: "Review Mode",
+            tapToReveal: "Tap to reveal answer",
             mastery: {
                 new: "New",
                 learning: "Learning",
                 mastered: "Mastered",
+            },
+            srs: {
+                hard: "Hard",
+                good: "Good",
+                easy: "Easy",
             }
         }
     }

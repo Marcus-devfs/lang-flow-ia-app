@@ -1,13 +1,15 @@
-import React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { useVocabularyStore, Flashcard } from '../../src/store/useVocabularyStore';
-import { Bookmark, Star, Info } from 'lucide-react-native';
+import { Bookmark, Star, Info, Play } from 'lucide-react-native';
 import { useTranslation } from '../../src/hooks/useTranslation';
+import { FlashcardQuiz } from '../../src/components/FlashcardQuiz';
 
 export default function VocabularyScreen() {
     const { cards } = useVocabularyStore();
     const { t } = useTranslation();
+    const [isQuizMode, setIsQuizMode] = useState(false);
 
     const getMasteryColor = (level: number) => {
         if (level === 0) return 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300';
@@ -26,8 +28,6 @@ export default function VocabularyScreen() {
 
         return (
             <View className="bg-white dark:bg-slate-800 p-5 rounded-2xl mb-4 shadow-sm border border-slate-100 dark:border-slate-800 mx-1">
-
-                {/* Header: Term & Badge */}
                 <View className="flex-row justify-between items-start mb-4">
                     <View className="flex-1 mr-4">
                         <Text className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -46,12 +46,10 @@ export default function VocabularyScreen() {
                     </View>
                 </View>
 
-                {/* Definition */}
                 <Text className="text-lg text-slate-700 dark:text-slate-300 mb-6 leading-relaxed">
                     {item.definition}
                 </Text>
 
-                {/* Example Box */}
                 <View className="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-xl border-l-4 border-blue-500">
                     <Text className="text-xs text-blue-500 font-bold mb-1 uppercase">{t.vocabulary.example}</Text>
                     <Text className="text-slate-600 dark:text-slate-400 text-base italic leading-relaxed">
@@ -61,6 +59,14 @@ export default function VocabularyScreen() {
             </View>
         );
     };
+
+    if (isQuizMode) {
+        return (
+            <Container safe centered>
+                <FlashcardQuiz onClose={() => setIsQuizMode(false)} />
+            </Container>
+        );
+    }
 
     return (
         <Container safe={false} className="pt-14 px-2">
@@ -80,7 +86,6 @@ export default function VocabularyScreen() {
                     {t.vocabulary.subtitle.replace('{count}', cards.length.toString())}
                 </Text>
 
-                {/* Explanation Block */}
                 <View className="flex-row items-start bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
                     <Info size={16} color="#64748b" className="mr-2 mt-0.5" />
                     <Text className="text-xs text-slate-500 dark:text-slate-400 flex-1 leading-relaxed">
@@ -96,6 +101,14 @@ export default function VocabularyScreen() {
                 contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 4 }}
                 showsVerticalScrollIndicator={false}
             />
+
+            {/* FAB to Start Quiz */}
+            <TouchableOpacity
+                onPress={() => setIsQuizMode(true)}
+                className="absolute bottom-6 right-6 bg-blue-600 p-4 rounded-full shadow-lg shadow-blue-500/40"
+            >
+                <Play size={24} color="white" fill="white" />
+            </TouchableOpacity>
         </Container>
     );
 }

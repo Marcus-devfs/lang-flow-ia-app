@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, View, Alert } from 'react-native';
 import { Container } from '../../src/components/Container';
 import { Button } from '../../src/components/Button';
@@ -7,25 +7,33 @@ import { useAudioRecorder } from '../../src/hooks/useAudioRecorder';
 import { useVoiceStore } from '../../src/store/useVoiceStore';
 import { useTranslation } from '../../src/hooks/useTranslation';
 import { Info } from 'lucide-react-native';
+import { useSessionFeedback } from '../../src/hooks/useSessionFeedback';
+import { FeedbackView } from '../../src/components/FeedbackView';
 
 export default function PracticeScreen() {
     const { startRecording, stopRecording, hasPermission } = useAudioRecorder();
-    const { isRecording, recordingUri, setProcessing, isProcessing } = useVoiceStore();
+    const { isRecording, recordingUri, isProcessing, sessionResult, resetSession } = useVoiceStore();
     const { t } = useTranslation();
+    const { analyzeSession } = useSessionFeedback();
 
     const handleToggleRecording = async () => {
         if (isRecording) {
-            setProcessing(true);
-            await stopRecording();
-            // Simulate API call
-            setTimeout(() => {
-                setProcessing(false);
-                Alert.alert(t.practice.savedAlertTitle, t.practice.savedAlertMsg);
-            }, 1500);
+            const uri = await stopRecording();
+            if (uri) {
+                await analyzeSession(uri);
+            }
         } else {
             await startRecording();
         }
     };
+
+    if (sessionResult) {
+        return (
+            <Container safe centered>
+                <FeedbackView onContinue={resetSession} />
+            </Container>
+        );
+    }
 
     return (
         <Container safe centered>
